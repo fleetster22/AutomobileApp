@@ -18,6 +18,13 @@ function Nav() {
 
   ];
 
+  const servicesItems = [
+    { to: '/services', label: 'Service Appointments' },
+    { to: '/services/history', label: 'Service Appointment History' },
+    { to: '/services/new', label: 'New Service Form' },
+    { to: '/services/technician/new', label: 'Add Technician Form' },
+  ];
+
   return (
     <nav className="navbar navbar-expand-lg bg-info navbar-dark">
       <div className="container-fluid">
@@ -43,6 +50,14 @@ function Nav() {
               </div>
               <ul className="dropdown-menu" aria-labelledby="dropdownInventory">
                 {generateDropdownItems(inventoryItems)}
+              </ul>
+            </li>
+            <li className="nav-item dropdown">
+              <div className="btn btn-info dropdown-toggle" id="dropdownServices" data-bs-toggle="dropdown">
+                Services
+              </div>
+              <ul className="dropdown-menu" aria-labelledby="dropdownServices">
+                {generateDropdownItems(servicesItems)}
               </ul>
             </li>
           </ul>
