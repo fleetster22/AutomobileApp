@@ -1,5 +1,8 @@
-from django.http import JsonResponse
+from django.shortcuts import render
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_http_methods
+from django.core.exceptions import ObjectDoesNotExist
+from .models import Automobile, VehicleModel
 import json
 
 from .encoders import (
@@ -9,7 +12,6 @@ from .encoders import (
 )
 from .models import Automobile, Manufacturer, VehicleModel
 
-
 @require_http_methods(["GET", "POST"])
 def api_automobiles(request):
     if request.method == "GET":
@@ -18,24 +20,30 @@ def api_automobiles(request):
             {"autos": autos},
             encoder=AutomobileEncoder,
         )
-    else:
+    elif request.method == "POST":
+        content = {}
         try:
             content = json.loads(request.body)
-            model_id = content["model_id"]
+        except json.JSONDecodeError:
+            return HttpResponseBadRequest("Invalid JSON format.")
+
+        model_id = content.get("model_id")
+        if not model_id:
+            return HttpResponseBadRequest("Missing 'model_id' field in request.")
+
+        try:
             model = VehicleModel.objects.get(pk=model_id)
-            content["model"] = model
+        except VehicleModel.DoesNotExist:
+            return HttpResponseBadRequest(f"No VehicleModel found for id: {model_id}")
+
+        content["model"] = model
+        content["sold"] = content.get("sold", False)  # Default to False if not provided
+        try:
             auto = Automobile.objects.create(**content)
-            return JsonResponse(
-                auto,
-                encoder=AutomobileEncoder,
-                safe=False,
-            )
-        except:
-            response = JsonResponse(
-                {"message": "Could not create the automobile"}
-            )
-            response.status_code = 400
-            return response
+            return JsonResponse(auto, encoder=AutomobileEncoder, safe=False)
+        except Exception as e:
+            return HttpResponseBadRequest(f"Error creating automobile: {str(e)}")
+
 
 
 @require_http_methods(["DELETE", "GET", "PUT"])
@@ -68,7 +76,7 @@ def api_automobile(request, vin):
             content = json.loads(request.body)
             auto = Automobile.objects.get(vin=vin)
 
-            props = ["color", "year", "sold"]
+            props = ["color", "year"]
             for prop in props:
                 if prop in content:
                     setattr(auto, prop, content[prop])
