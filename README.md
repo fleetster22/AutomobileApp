@@ -1,6 +1,6 @@
 **Team:**
-1. Chris - Both using peer programming
-2. Anaka - Both using peer programming
+1. Chris - Services; Both using peer programming
+2. Anaka - Sales; Both using peer programming
 
 For this project we leveraged peer programming to maintain code consistency and to ensure that both of the team members were on the same page. We worked to maintain a consistent style to include the use of functions and abstraction so that changes would be consistently applied across the board.
 
