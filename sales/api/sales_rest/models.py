@@ -1,27 +1,36 @@
 from django.db import models
 from django.urls import reverse
 
+
 class AutomobileVO(models.Model):
+    color = models.CharField(max_length=50, default=None)
+    year = models.PositiveSmallIntegerField(default=None)
     vin = models.CharField(max_length=17, unique=True)
-    color = models.CharField(max_length=50)
-    year = models.PositiveSmallIntegerField()
-    model = models.CharField(max_length=150)
+    sold = models.BooleanField(default=False)
+    model = models.CharField(max_length=80, default=None)
+    manufacturer = models.CharField(max_length=50, default=None)
+    price = models.PositiveSmallIntegerField(default=None)
+
 
     def __str__(self):
         return f"{self.vin}"
 
-class SalesPerson(models.Model):
-    name = models.CharField(max_field=150)
-    employee_number = models.PositiveSmallIntegerField()
+
+class Salesperson(models.Model):
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    employee_id = models.PositiveSmallIntegerField()
 
     def get_api_url(self):
-        return reverse("api_sales_persons", kwargs={"id": self.id})
+        return reverse("api_salespeople", kwargs={"id": self.id})
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.first_name}"
+
 
 class Customer(models.Model):
-    name = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     address = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=20)
 
@@ -29,13 +38,13 @@ class Customer(models.Model):
         return reverse("api_customers", kwargs={"id": self.id})
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.last_name}"
 
-class SalesRecord(models.Model):
-    price = models.CharField(max_length=150)
 
-    sales_person = models.ForeignKey(
-        SalesPerson,
+class Sale(models.Model):
+    price = models.FloatField
+    salesperson = models.ForeignKey(
+        Salesperson,
         related_name="sales_record",
         on_delete=models.PROTECT,
     )
@@ -51,7 +60,7 @@ class SalesRecord(models.Model):
     )
 
     def get_api_urls(self):
-        return reverse("api_sales_records", kwargs={"id": self.id})
+        return reverse("api_sales", kwargs={"id": self.id})
 
     def __str__(self):
         return f"{self.id}"

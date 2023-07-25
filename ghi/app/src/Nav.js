@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React from "react";
+import { NavLink } from "react-router-dom";
 
 function Nav() {
   const generateDropdownItems = (items) => {
@@ -19,7 +19,14 @@ function Nav() {
     { to: '/models/new', label: 'New Model Form' },
     { to: '/automobiles', label: 'Automobile List' },
     { to: '/automobiles/new', label: 'New Automobile Form' },
+  ];
 
+  const salesItems = [
+    { to: "/sales", label: "Sales Record List" },
+    { to: "/customers", label: "Customer List" },
+    { to: "/customers/new", label: "Create Customer Form" },
+    { to: "/sales/new", label: "New Sale Form" },
+    { to: "/salespeople/new", label: "Add Salesperson Form" },
   ];
 
   const servicesItems = [
@@ -50,7 +57,11 @@ function Nav() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item dropdown">
-              <div className="btn btn-info dropdown-toggle" id="dropdownInventory" data-bs-toggle="dropdown">
+              <div
+                className="btn btn-info dropdown-toggle"
+                id="dropdownInventory"
+                data-bs-toggle="dropdown"
+              >
                 Inventory
               </div>
               <ul className="dropdown-menu" aria-labelledby="dropdownInventory">
@@ -63,6 +74,18 @@ function Nav() {
               </div>
               <ul className="dropdown-menu" aria-labelledby="dropdownServices">
                 {generateDropdownItems(servicesItems)}
+              </ul>
+            </li>
+            <li className="nav-item dropdown">
+              <div
+                className="btn btn-info dropdown-toggle"
+                id="dropdownSales"
+                data-bs-toggle="dropdown"
+              >
+                Sales
+              </div>
+              <ul className="dropdown-menu" aria-labelledby="dropdownSales">
+                {generateDropdownItems(salesItems)}
               </ul>
             </li>
           </ul>
