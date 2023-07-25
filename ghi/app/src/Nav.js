@@ -17,7 +17,13 @@ function Nav() {
     { to: "/manufacturers/new", label: "New Manufacturer Form" },
   ];
 
-  const salesItems = [{ to: "/customers/new", label: "Create Customer Form" }];
+  const salesItems = [
+    { to: "/sales", label: "Sales Record List" },
+    { to: "/customers", label: "Customer List" },
+    { to: "/customers/new", label: "Create Customer Form" },
+    { to: "/sales/new", label: "New Sale Form" },
+    { to: "/salespeople/new", label: "Add Salesperson Form" },
+  ];
 
   return (
     <nav className="navbar navbar-expand-lg bg-info navbar-dark">

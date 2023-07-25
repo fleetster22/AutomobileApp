@@ -25,7 +25,7 @@ class Salesperson(models.Model):
         return reverse("api_salespeople", kwargs={"id": self.id})
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.first_name}"
 
 
 class Customer(models.Model):
@@ -38,7 +38,7 @@ class Customer(models.Model):
         return reverse("api_customers", kwargs={"id": self.id})
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.last_name}"
 
 
 class Sale(models.Model):
