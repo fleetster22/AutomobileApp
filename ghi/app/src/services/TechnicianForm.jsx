@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 
 function TechnicianForm() {
-  const [name, setName] = useState('');
-  const [employeeNumber, setEmployeeNumber] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [employeeId, setEmployeeId] = useState('');
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
+  const handleFirstNameChange = (event) => {
+    setFirstName(event.target.value);
   };
 
-  const handleEmployeeNumberChange = (event) => {
-    setEmployeeNumber(event.target.value);
+  const handleLastNameChange = (event) => {
+    setLastName(event.target.value);
+  };
+
+  const handleEmployeeIdChange = (event) => {
+    setEmployeeId(event.target.value);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = {
-      employee_number: employeeNumber,
-      name: name,
+      employee_id: employeeId,
+      first_name: firstName,
+      last_name: lastName,
     };
 
     const techUrl = "http://localhost:8080/api/technician/";
@@ -31,11 +37,14 @@ function TechnicianForm() {
     try {
       const response = await fetch(techUrl, fetchConfig);
       if (response.ok) {
-        setName('');
-        setEmployeeNumber('');
+        setFirstName('');
+        setLastName('');
+        setEmployeeId('');
       } else {
+        // Handle error if needed
       }
     } catch (error) {
+      // Handle error if needed
     }
   };
 
@@ -48,28 +57,40 @@ function TechnicianForm() {
             <form onSubmit={handleSubmit} id="create-technician-form">
               <div className="form-floating mb-3">
                 <input
-                  onChange={handleNameChange}
-                  value={name}
-                  placeholder="Name"
+                  onChange={handleFirstNameChange}
+                  value={firstName}
+                  placeholder="First Name"
                   type="text"
-                  name="name"
-                  id="name"
+                  name="first_name"
+                  id="first_name"
                   className="form-control"
                 />
-                <label htmlFor="name">Technician</label>
+                <label htmlFor="first_name">First Name</label>
               </div>
               <div className="form-floating mb-3">
                 <input
-                  onChange={handleEmployeeNumberChange}
-                  value={employeeNumber}
-                  placeholder="Employee_number"
-                  required
+                  onChange={handleLastNameChange}
+                  value={lastName}
+                  placeholder="Last Name"
                   type="text"
-                  name="employee_number"
-                  id="employee_number"
+                  name="last_name"
+                  id="last_name"
                   className="form-control"
                 />
-                <label htmlFor="employee_number">Employee number</label>
+                <label htmlFor="last_name">Last Name</label>
+              </div>
+              <div className="form-floating mb-3">
+                <input
+                  onChange={handleEmployeeIdChange}
+                  value={employeeId}
+                  placeholder="Employee ID"
+                  required
+                  type="text"
+                  name="employee_id"
+                  id="employee_id"
+                  className="form-control"
+                />
+                <label htmlFor="employee_id">Employee ID</label>
               </div>
               <button className="btn btn-primary">Create</button>
             </form>

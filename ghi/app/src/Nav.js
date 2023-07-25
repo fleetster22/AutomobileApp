@@ -27,6 +27,7 @@ function Nav() {
     { to: '/services/history', label: 'Service Appointment History' },
     { to: '/services/new', label: 'New Service Form' },
     { to: '/services/technician/new', label: 'Add Technician Form' },
+    { to: '/services/all-technicians', label: 'All Technicians' },
   ];
 
   return (
