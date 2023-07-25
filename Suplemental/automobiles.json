@@ -1,0 +1,112 @@
+{
+	"autos": [
+		{
+			"href": "/api/automobiles/VIN00010000000001/",
+			"id": 1,
+			"color": "Red",
+			"year": 2021,
+			"vin": "VIN00010000000001",
+			"model": {
+				"href": "/api/models/1/",
+				"id": 1,
+				"name": "RS7",
+				"picture_url": "https://i.ytimg.com/vi/L42-aFe8bMo/maxresdefault.jpg",
+				"manufacturer": {
+					"href": "/api/manufacturers/1/",
+					"id": 1,
+					"name": "Audi"
+				}
+			}
+		},
+		{
+			"href": "/api/automobiles/VIN00010000000002/",
+			"id": 2,
+			"color": "blue",
+			"year": 2021,
+			"vin": "VIN00010000000002",
+			"model": {
+				"href": "/api/models/2/",
+				"id": 2,
+				"name": "M4",
+				"picture_url": "https://hips.hearstapps.com/hmg-prod/images/2022-bmw-m4-front-three-quarters-64075157a1722.jpg",
+				"manufacturer": {
+					"href": "/api/manufacturers/2/",
+					"id": 2,
+					"name": "BMW"
+				}
+			}
+		},
+		{
+			"href": "/api/automobiles/VIN00010000000003/",
+			"id": 3,
+			"color": "Black",
+			"year": 2022,
+			"vin": "VIN00010000000003",
+			"model": {
+				"href": "/api/models/3/",
+				"id": 3,
+				"name": "Corvette",
+				"picture_url": "https://www.topgear.com/sites/default/files/cars-car/image/2019/03/2019-chevrolet-corvette-zr1-011.jpg",
+				"manufacturer": {
+					"href": "/api/manufacturers/3/",
+					"id": 3,
+					"name": "Chevy"
+				}
+			}
+		},
+		{
+			"href": "/api/automobiles/VIN00010000000004/",
+			"id": 4,
+			"color": "Yellow",
+			"year": 2022,
+			"vin": "VIN00010000000004",
+			"model": {
+				"href": "/api/models/4/",
+				"id": 4,
+				"name": "Challenger Demon",
+				"picture_url": "https://s1.cdn.autoevolution.com/images/news/dodge-challenger-demon-manages-to-look-more-sinister-in-widebody-rendering-164037_1.jpeg",
+				"manufacturer": {
+					"href": "/api/manufacturers/4/",
+					"id": 4,
+					"name": "Dodge"
+				}
+			}
+		},
+		{
+			"href": "/api/automobiles/VIN00010000000005/",
+			"id": 5,
+			"color": "Black",
+			"year": 2023,
+			"vin": "VIN00010000000005",
+			"model": {
+				"href": "/api/models/4/",
+				"id": 4,
+				"name": "Challenger Demon",
+				"picture_url": "https://s1.cdn.autoevolution.com/images/news/dodge-challenger-demon-manages-to-look-more-sinister-in-widebody-rendering-164037_1.jpeg",
+				"manufacturer": {
+					"href": "/api/manufacturers/4/",
+					"id": 4,
+					"name": "Dodge"
+				}
+			}
+		},
+		{
+			"href": "/api/automobiles/VIN00010000000007/",
+			"id": 6,
+			"color": "Red",
+			"year": 2023,
+			"vin": "VIN00010000000007",
+			"model": {
+				"href": "/api/models/5/",
+				"id": 5,
+				"name": "Bronco Raptor",
+				"picture_url": "https://s1.cdn.autoevolution.com/images/news/gallery/2022-ford-bronco-raptor-has-barely-been-driven-might-sell-for-twice-the-sticker-price_6.jpg",
+				"manufacturer": {
+					"href": "/api/manufacturers/5/",
+					"id": 5,
+					"name": "Ford"
+				}
+			}
+		}
+	]
+}

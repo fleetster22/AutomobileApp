@@ -1,11 +1,12 @@
 from django.db import models
 from django.urls import reverse
 
-class AutoMobileVO(models.Model):
+class AutomobileVO(models.Model):
     vin = models.CharField(max_length=17, unique=True)
     color = models.CharField(max_length=50)
     year = models.PositiveSmallIntegerField()
     model = models.CharField(max_length=150)
+    sold = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.vin}"
@@ -20,7 +21,9 @@ class AutoMobileVO(models.Model):
 
 class Technician(models.Model):
     name = models.CharField(max_length=200)
-    employee_number = models.PositiveIntegerField(unique=True)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    employee_id = models.PositiveIntegerField(unique=True)
 
     def __str__(self):
         return self.name
@@ -34,20 +37,21 @@ class Technician(models.Model):
 
 
 
-class ServiceAppointment(models.Model):
-    customer_name = models.CharField(max_length=200)
-    date = models.DateTimeField(auto_now=False, auto_now_add=False)
-    time = models.DateTimeField(auto_now=False, auto_now_add=False)
+class Appointment(models.Model):
+    customer = models.CharField(max_length=200)
+    date_time = models.DateTimeField(auto_now_add=True)
     reason = models.CharField(max_length=200)
     completed = models.BooleanField(default=False)
     vip = models.BooleanField(default=False)
     canceled = models.BooleanField(default=False)
     vin = models.CharField(max_length=200)
+    status = models.BooleanField(default=False)
+
 
 
     technician = models.ForeignKey(
         Technician,
-        related_name="ServiceAppointment",
+        related_name="Appointment",
         on_delete=models.PROTECT
         )
 

@@ -14,12 +14,11 @@ export default function CustomerList() {
       const customersData = await customersResponse.json();
       setCustomers(customersData.customers);
     }
-
   };
 
   useEffect(() => {
     getAll();
-  }, [load]);
+  }, []);
 
   return (
     <div className="container">
