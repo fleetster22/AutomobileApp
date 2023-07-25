@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React from "react";
+import { NavLink } from "react-router-dom";
 
 function Nav() {
   const generateDropdownItems = (items) => {
@@ -13,10 +13,11 @@ function Nav() {
   };
 
   const inventoryItems = [
-    { to: '/manufacturers', label: 'Manufacturer List' },
-    { to: '/manufacturers/new', label: 'New Manufacturer Form' },
-
+    { to: "/manufacturers", label: "Manufacturer List" },
+    { to: "/manufacturers/new", label: "New Manufacturer Form" },
   ];
+
+  const salesItems = [{ to: "/customers/new", label: "Create Customer Form" }];
 
   return (
     <nav className="navbar navbar-expand-lg bg-info navbar-dark">
@@ -38,11 +39,27 @@ function Nav() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item dropdown">
-              <div className="btn btn-info dropdown-toggle" id="dropdownInventory" data-bs-toggle="dropdown">
+              <div
+                className="btn btn-info dropdown-toggle"
+                id="dropdownInventory"
+                data-bs-toggle="dropdown"
+              >
                 Inventory
               </div>
               <ul className="dropdown-menu" aria-labelledby="dropdownInventory">
                 {generateDropdownItems(inventoryItems)}
+              </ul>
+            </li>
+            <li className="nav-item dropdown">
+              <div
+                className="btn btn-info dropdown-toggle"
+                id="dropdownSales"
+                data-bs-toggle="dropdown"
+              >
+                Sales
+              </div>
+              <ul className="dropdown-menu" aria-labelledby="dropdownSales">
+                {generateDropdownItems(salesItems)}
               </ul>
             </li>
           </ul>

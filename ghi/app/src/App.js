@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import MainPage from './MainPage';
-import Nav from './Nav';
-import ManufacturerList from './inventory/ManufacturerList';
-import ManufacturerForm from './inventory/ManufacturerForm';
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MainPage from "./MainPage";
+import Nav from "./Nav";
+import ManufacturerList from "./inventory/ManufacturerList";
+import ManufacturerForm from "./inventory/ManufacturerForm";
+import CustomerForm from "./sales/CustomerForm";
 
 function App() {
   return (
@@ -15,6 +15,9 @@ function App() {
           <Route path="manufacturers">
             <Route index element={<ManufacturerList />} />
             <Route path="new" element={<ManufacturerForm />} />
+          </Route>
+          <Route path="sales">
+            <Route path="new" element={<CustomerForm />} />
           </Route>
         </Routes>
       </div>

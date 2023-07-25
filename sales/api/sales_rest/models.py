@@ -3,8 +3,14 @@ from django.urls import reverse
 
 
 class AutomobileVO(models.Model):
+    color = models.CharField(max_length=50, default=None)
+    year = models.PositiveSmallIntegerField(default=None)
     vin = models.CharField(max_length=17, unique=True)
-    sold = models.BooleanField()
+    sold = models.BooleanField(default=False)
+    model = models.CharField(max_length=80, default=None)
+    manufacturer = models.CharField(max_length=50, default=None)
+    price = models.PositiveSmallIntegerField(default=None)
+
 
     def __str__(self):
         return f"{self.vin}"
