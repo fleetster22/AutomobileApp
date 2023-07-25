@@ -15,6 +15,10 @@ function Nav() {
   const inventoryItems = [
     { to: '/manufacturers', label: 'Manufacturer List' },
     { to: '/manufacturers/new', label: 'New Manufacturer Form' },
+    { to: '/models', label: 'Model List' },
+    { to: '/models/new', label: 'New Model Form' },
+    { to: '/automobiles', label: 'Automobile List' },
+    { to: '/automobiles/new', label: 'New Automobile Form' },
 
   ];
 
