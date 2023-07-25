@@ -7,8 +7,7 @@ function ServiceForm() {
   const [technician, setTechnician] = useState('');
   const [vin, setVin] = useState('');
   const [customerName, setCustomerName] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const [dateTime, setDateTime] = useState('');
   const [reason, setReason] = useState('');
 
   const handleVinChange = (event) => {
@@ -17,11 +16,8 @@ function ServiceForm() {
   const handleCustomerNameChange = (event) => {
     setCustomerName(event.target.value);
   };
-  const handleDateChange = (event) => {
-    setDate(event.target.value);
-  };
-  const handleTimeChange = (event) => {
-    setTime(event.target.value);
+  const handleDateTimeChange = (event) => {
+    setDateTime(event.target.value);
   };
   const handleTechnicianChange = (event) => {
     setTechnician(event.target.value);
@@ -34,9 +30,8 @@ function ServiceForm() {
     event.preventDefault();
     const data = {
       vin,
-      customer_name: customerName,
-      date,
-      time,
+      customer: customerName,
+      dateTime,
       technician,
       reason,
     };
@@ -67,8 +62,7 @@ function ServiceForm() {
   const clearForm = () => {
     setVin('');
     setCustomerName('');
-    setDate('');
-    setTime('');
+    setDateTime('');
     setTechnician('');
     setReason('');
   };
@@ -113,27 +107,15 @@ function ServiceForm() {
               </div>
               <div className="form-floating mb-3">
                 <input
-                  onChange={handleDateChange}
-                  defaultValue={date}
-                  placeholder="Date"
-                  type="date"
-                  name="date"
-                  id="date"
+                  onChange={handleDateTimeChange}
+                  value={dateTime}
+                  placeholder="Date and Time"
+                  type="datetime-local"
+                  name="dateTime"
+                  id="dateTime"
                   className="form-control"
                 />
-                <label htmlFor="date">Date</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input
-                  onChange={handleTimeChange}
-                  defaultValue={time}
-                  placeholder="Time"
-                  type="time"
-                  name="time"
-                  id="time"
-                  className="form-control"
-                />
-                <label htmlFor="time">Time</label>
+                <label htmlFor="dateTime">Date and Time</label>
               </div>
               <div className="mb-3">
                 <select

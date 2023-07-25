@@ -9,12 +9,12 @@ sys.path.append("")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "service_project.settings")
 django.setup()
 
-from service_rest.models import AutoMobileVO
+from service_rest.models import AutomobileVO
 def get_automobile():
     response = requests.get("http://inventory-api:8000/api/automobiles/")
     content = json.loads(response.content)
     for automobile in content["autos"]:
-        AutoMobileVO.objects.update_or_create(
+        AutomobileVO.objects.update_or_create(
             vin=automobile["vin"],
             color = automobile["color"],
             year = automobile["year"],

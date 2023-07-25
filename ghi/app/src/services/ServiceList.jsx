@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 function ServiceList() {
   const [services, setServices] = useState([]);
+  const [technicianData, setTechnicianData] = useState({});
 
   const handleComplete = async (event) => {
     const serviceUrl = `http://localhost:8080/api/services/${event.id}/`;
@@ -18,8 +19,25 @@ function ServiceList() {
       if (serviceResponse.ok) {
         setServices((prevServices) => prevServices.filter((service) => service.id !== event.id));
       } else {
+        // Handle error if needed
       }
     } catch (error) {
+      // Handle error if needed
+    }
+  };
+
+  const fetchTechnicianData = async (technicianId) => {
+    const technicianUrl = `http://localhost:8080/api/technician/${technicianId}/`;
+    try {
+      const response = await fetch(technicianUrl);
+      if (response.ok) {
+        const data = await response.json();
+        setTechnicianData(data.technician);
+      } else {
+        // Handle error if needed
+      }
+    } catch (error) {
+      // Handle error if needed
     }
   };
 
@@ -31,26 +49,40 @@ function ServiceList() {
         const data = await response.json();
         setServices(data.service_appointments);
       } else {
+        // Handle error if needed
       }
     } catch (error) {
+      // Handle error if needed
     }
   };
 
-  async function deleteService(services_appointments) {
-    const deleteUrl = `http://localhost:8080/api/services/${services_appointments.id}/`;
+  async function deleteService(service) {
+    const deleteUrl = `http://localhost:8080/api/services/${service.id}/`;
     try {
       const response = await fetch(deleteUrl, { method: 'delete' });
       if (response.ok) {
-        setServices((prevServices) => prevServices.filter((service) => service.id !== services_appointments.id));
+        setServices((prevServices) => prevServices.filter((s) => s.id !== service.id));
       } else {
+        // Handle error if needed
       }
     } catch (error) {
+      // Handle error if needed
     }
   }
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (services.length > 0) {
+      services.forEach((service) => {
+        if (service.technician_id) {
+          fetchTechnicianData(service.technician_id);
+        }
+      });
+    }
+  }, [services]);
 
   return (
     <div className="container">
@@ -61,9 +93,8 @@ function ServiceList() {
             <tr>
               <th>VIP</th>
               <th>VIN</th>
-              <th>Customer name</th>
-              <th>Date</th>
-              <th>Time</th>
+              <th>Customer</th>
+              <th>Date & Time</th>
               <th>Technician</th>
               <th>Reason</th>
               <th>Status</th>
@@ -71,44 +102,52 @@ function ServiceList() {
             </tr>
           </thead>
           <tbody>
-            {services
-              .filter((service) => !service.completed)
-              .map((service) => (
-                <tr key={service.id}>
-                  <td>{service.vip ? 'Yes' : 'No'}</td>
-                  <td>{service.vin}</td>
-                  <td>{service.customer_name}</td>
-                  <td>{new Date(service.date).toLocaleDateString()}</td>
-                  <td>
-                    <div className="text-center" style={{ minWidth: '90px' }}>
-                      {new Date(service.time).toLocaleString([], {
+            {services.length > 0 ? (
+              services
+                .filter((service) => !service.completed)
+                .map((service) => (
+                  <tr key={service.id}>
+                    <td>{service.vip ? 'Yes' : 'No'}</td>
+                    <td>{service.vin}</td>
+                    <td>{service.customer}</td>
+                    <td>
+                      {new Date(service.date_time).toLocaleString([], {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit',
                         hour12: true,
                       })}
-                    </div>
-                  </td>
-                  <td>{service.technician.name}</td>
-                  <td>{service.reason}</td>
-                  <td>
-                    <button className="btn btn-success" onClick={() => handleComplete(service)}>
-                      Complete
-                    </button>
-                  </td>
-                  <td>
-                  <button className="btn btn-danger" onClick={() => deleteService(service)}>
-                      Cancel
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      {technicianData.id === service.technician_id
+                        ? `${technicianData.last_name}, ${technicianData.first_name}`
+                        : 'N/A'}
+                    </td>
+                    <td>{service.reason}</td>
+                    <td>
+                      <button className="btn btn-success" onClick={() => handleComplete(service)}>
+                        Complete
+                      </button>
+                    </td>
+                    <td>
+                      <button className="btn btn-danger" onClick={() => deleteService(service)}>
+                        Cancel
+                      </button>
+                    </td>
+                  </tr>
+                ))
+            ) : (
+              <tr>
+                <td colSpan="8">No service appointments available.</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
     </div>
   );
-
-
 }
 
 export default ServiceList;

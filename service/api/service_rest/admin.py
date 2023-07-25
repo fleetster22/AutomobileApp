@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import ServiceAppointment, Technician
+from .models import Appointment, Technician
 
-@admin.register(ServiceAppointment)
-class ServiceAppointmentAdmin(admin.ModelAdmin):
+@admin.register(Appointment)
+class AppointmentAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(Technician)
