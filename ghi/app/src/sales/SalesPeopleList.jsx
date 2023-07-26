@@ -1,25 +1,45 @@
 import React, { useEffect, useState } from 'react';
 
-export default function SalesPeopleList(props) {
+export default function SalesPeopleList() {
     const [salesPeople, setSalesPeople] = useState([]);
-    const [filter, setFilter] = useState('');
 
-    const handleFilterChange = (event) => setFilter(event.target.value);
-
-    const getAll = async () => {
+    const getSalespeople = async () => {
         const salesPeopleUrl = 'http://localhost:8090/api/salespeople/';
-        const salesPeopleResponse = await fetch(salesPeopleUrl);
+        try {
+            const salesPeopleResponse = await fetch(salesPeopleUrl);
 
         if (salesPeopleResponse.ok) {
             const salesPeopleData = await salesPeopleResponse.json();
-            console.log(salesPeopleData)
-            setSalesPeople(salesPeopleData.salesPeople);
+            setSalesPeople(salesPeopleData.salespeople);
+        } else {
+            return <div>Error fetching Salespeople</div>
         }
-
+    } catch (error) {
+            return <div>Error fetching Salespeople</div>
+        }
     };
 
+    const deleteSalesperson = async (id) => {
+        const deleteUrl = `http://localhost:8090/api/salespeople/${id}`;
+        try {
+            const deleteResponse = await fetch(deleteUrl, {
+                method: 'DELETE',
+            });
+
+        if (deleteResponse.ok) {
+            getSalespeople();
+        } else {
+            return <div>Error deleting Salesperson</div>
+        }
+    } catch (error) {
+            return <div>Error deleting Salesperson</div>
+        }
+    };
+
+
 useEffect(() => {
-    getAll();
+    getSalespeople();
+    deleteSalesperson();
 }
 , []);
 
@@ -27,12 +47,6 @@ return (
     <div className="container">
         <h1>Sales People Records</h1>
         <div className="mb-3">
-            <select onChange={handleFilterChange} required name="salesPeople" id="salesPeople" value={filter} className="form-select">
-                <option value="">All Sales People</option>
-                {salesPeople.map((salesperson) => (
-                    <option key={salesperson.id} value={salesperson.first_name}> {salesperson.first_name} </option>
-                ))}
-            </select>
         </div>
         <table className="table table-striped">
             <thead>
@@ -44,14 +58,12 @@ return (
             </thead>
             <tbody>
                 {salesPeople
-                    .filter((salesperson) => {
-                        return filter === '' ? true : salesperson.first_name.includes(filter);
-                    })
                     .map((salesperson) => (
-                        <tr key={salesperson.employee_id}>
+                        <tr key={salesperson.id}>
                             <td>{salesperson.first_name}</td>
                             <td>{salesperson.last_name}</td>
                             <td>{salesperson.employee_id}</td>
+                            <td><button className="btn btn-danger" onClick={() => deleteSalesperson(salesperson.id)}>Delete</button></td>
                         </tr>
                     ))}
             </tbody>

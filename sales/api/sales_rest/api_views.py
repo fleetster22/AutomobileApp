@@ -6,7 +6,7 @@ from .encoders import (
     AutomobileVOEncoder,
     SalesPersonEncoder,
     CustomerEncoder,
-    SalesRecordEncoder,
+    SalesEncoder,
 )
 from .models import (
     AutomobileVO,
@@ -17,9 +17,9 @@ from .models import (
 
 
 @require_http_methods(["GET"])
-def api_automobiles(request):
+def api_available_automobiles(request):
     if request.method == "GET":
-        available_autos = AutomobileVO.objects.filter(sales_record__isnull=True)
+        available_autos = AutomobileVO.objects.filter(sold=False)
         return JsonResponse(
             {"available_autos": available_autos},
             encoder=AutomobileVOEncoder,
@@ -157,34 +157,36 @@ def api_customer(request, id):
 def api_sales(request, salesperson_employee_id=None):
     if request.method == "GET":
         if salesperson_employee_id is not None:
-            sales = Sale.objects.filter(salesperson_employee_id=salesperson_employee_id)
+            sales = Sale.objects.filter(
+                salesperson__employee_id=salesperson_employee_id
+            )
         else:
             sales = Sale.objects.all()
+
+        sales_list = [
+            {
+                "id": sale.id,
+                "salesperson": {
+                    "first_name": sale.salesperson.first_name,
+                    "last_name": sale.salesperson.last_name,
+                    "employee_id": sale.salesperson.employee_id,
+                },
+                "customer": {
+                    "first_name": sale.customer.first_name,
+                    "last_name": sale.customer.last_name,
+                },
+                "automobile": {
+                    "vin": sale.automobile.vin,
+                    "price": sale.automobile.price,
+                },
+            }
+            for sale in sales
+        ]
+
         return JsonResponse(
-            {"sales": sales},
-            encoder=SalesRecordEncoder,
+            {"sales": sales_list},
             safe=False,
         )
-
-    content = json.loads(request.body)
-    try:
-        salesperson = Salesperson.objects.get(id=content["salesperson"])
-        content["salesperson"] = salesperson
-    except Salesperson.DoesNotExist:
-        return JsonResponse(
-            {"message": "Sales person does not exist"},
-            status=404,
-        )
-    try:
-        customer = Customer.objects.get(id=content["customer"])
-        content["customer"] = customer
-    except Customer.DoesNotExist:
-        return JsonResponse({"message": "Customer does not exist"}, status=404)
-    try:
-        automobile = AutomobileVO.objects.get(vin=content["automobile"])
-        content["automobile"] = automobile
-    except AutomobileVO.DoesNotExist:
-        return JsonResponse({"message": "Automobile does not exist"}, status=404)
     record_of_sale = Sale.objects.filter(automobile_vin=content["automobile"])
     if record_of_sale:
         return JsonResponse(
@@ -196,7 +198,7 @@ def api_sales(request, salesperson_employee_id=None):
         sales = Sale.objects.create(**content)
         return JsonResponse(
             sales,
-            encoder=SalesRecordEncoder,
+            encoder=SalesEncoder,
             safe=False,
         )
     except Sale.DoesNotExist:
@@ -211,7 +213,7 @@ def api_sale(request, id):
     if request.method == "GET":
         try:
             sale = Sale.objects.get(id=id)
-            return JsonResponse(sale, encoder=SalesRecordEncoder, safe=False)
+            return JsonResponse(sale, encoder=SalesEncoder, safe=False)
         except Sale.DoesNotExist:
             return JsonResponse(
                 {"message": "Sales record does not exist"},
@@ -260,7 +262,7 @@ def api_sale(request, id):
             sales_record = Sale.objects.get(id=id)
             return JsonResponse(
                 sales_record,
-                encoder=SalesRecordEncoder,
+                encoder=SalesEncoder,
                 safe=False,
             )
         except Sale.DoesNotExist:
@@ -268,3 +270,33 @@ def api_sale(request, id):
                 {"message": "Sales record does not exist"},
                 status=404,
             )
+
+
+@require_http_methods
+def api_sales_history(request):
+    if request.method == "GET":
+        sales = Sale.objects.all().order_by("salesperson__last_name")
+        sales_list = [
+            {
+                "id": sale.id,
+                "salesperson": {
+                    "first_name": sale.salesperson.first_name,
+                    "last_name": sale.salesperson.last_name,
+                    "employee_id": sale.salesperson.employee_id,
+                },
+                "customer": {
+                    "first_name": sale.customer.first_name,
+                    "last_name": sale.customer.last_name,
+                },
+                "automobile": {
+                    "vin": sale.automobile.vin,
+                    "price": sale.automobile.price,
+                },
+            }
+            for sale in sales
+        ]
+
+        return JsonResponse(
+            {"sales": sales_list},
+            safe=False,
+        )

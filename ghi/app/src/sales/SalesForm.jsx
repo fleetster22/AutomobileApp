@@ -3,12 +3,11 @@ import React, { useEffect, useState } from 'react';
 
 export default function SalesForm() {
   const [automobile, setAutomobile] = useState('');
-  const [salesPerson, setSalesPerson] = useState('');
+  const [salesperson, setSalesperson] = useState('');
   const [customer, setCustomer] = useState('');
   const [price, setPrice] = useState('');
-
   const [automobiles, setAutomobiles] = useState([]);
-  const [salesPersons, setSalesPersons] = useState([]);
+  const [salespeople, setSalespeople] = useState([]);
   const [customers, setCustomers] = useState([]);
 
   const getAll = async () => {
@@ -16,23 +15,22 @@ export default function SalesForm() {
     const automobilesResponse = await fetch(automobilesUrl);
     if (automobilesResponse.ok) {
       const autoData = await automobilesResponse.json();
-      setAutomobiles(autoData.available_autos);
+      setAutomobiles(Array.isArray(autoData.available_autos) ? autoData.available_autos : []);
     }
 
     const salesPersonsUrl = 'http://localhost:8090/api/salespeople/';
     const salesPersonsResponse = await fetch(salesPersonsUrl);
     if (salesPersonsResponse.ok) {
       const salesPersonData = await salesPersonsResponse.json();
-      setSalesPersons(salesPersonData.sales_persons);
+      setSalespeople(Array.isArray(salesPersonData.sales_persons) ? salesPersonData.sales_persons : []);
     }
 
     const customersUrl = 'http://localhost:8090/api/customers/';
     const customersResponse = await fetch(customersUrl);
     if (customersResponse.ok) {
       const customerData = await customersResponse.json();
-      setCustomers(customerData.customers);
+      setCustomers(Array.isArray(customerData.customers) ? customerData.customers : []);
     }
-
   };
 
   useEffect(() => {
@@ -52,9 +50,16 @@ export default function SalesForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const selectedAutomobile = automobiles.find((auto) => auto.vin === automobile);
+  if (selectedAutomobile && selectedAutomobile.sold) {
+    alert('This automobile has already been sold');
+    return;
+}
+
     const data = {};
     data.automobile = automobile;
-    data.sales_person = salesPerson;
+    data.salesperson = salesperson;
     data.customer = customer;
     data.price = formatSalesPrice(price);
 
@@ -70,7 +75,7 @@ export default function SalesForm() {
     const response = await fetch(salesRecordUrl, fetchConfig);
     if (response.ok) {
       setAutomobile('');
-      setSalesPerson('');
+      setSalesperson('');
       setCustomer('');
       setPrice('');
     }
@@ -103,18 +108,18 @@ export default function SalesForm() {
             </div>
             <div className="mb-3">
               <select
-                onChange={(event) => setSalesPerson(event.target.value)}
+                onChange={(event) => setSalesperson(event.target.value)}
                 required
-                name="sales_person"
-                id="sales_person"
-                value={salesPerson}
+                name="salesperson"
+                id="salesperson"
+                value={salesperson}
                 className="form-select"
               >
                 <option value="">Choose a sales person</option>
-                {salesPersons.map((salesPerson) => {
+                {salespeople.map((salesperson) => {
                   return (
-                    <option key={salesPerson.id} value={salesPerson.id}>
-                      {salesPerson.first_name}
+                    <option key={salesperson.id} value={salesperson.id}>
+                      {salesperson.first_name}
                     </option>
                   );
                 })}
@@ -133,7 +138,7 @@ export default function SalesForm() {
                 {customers.map((customer) => {
                   return (
                     <option key={customer.id} value={customer.id}>
-                      {customer.last_name}
+                      {customer.first_name} {customer.last_name}
                     </option>
                   );
                 })}

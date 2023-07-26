@@ -6,7 +6,7 @@ export default function CustomerList(props) {
 
   const handleFilterChange = (event) => setFilter(event.target.value);
 
-  const getAll = async () => {
+  const getCustomer = async () => {
     const customersUrl = 'http://localhost:8090/api/customers/';
     const customersResponse = await fetch(customersUrl);
 
@@ -16,8 +16,20 @@ export default function CustomerList(props) {
     }
   };
 
+  const deleteCustomer = async (id) => {
+    const deleteUrl = `http://localhost:8090/api/customers/${id}`;
+    const deleteResponse = await fetch(deleteUrl, {
+      method: 'DELETE',
+    });
+
+    if (deleteResponse.ok) {
+      getCustomer();
+    }
+  };
+
   useEffect(() => {
-    getAll();
+    getCustomer();
+    deleteCustomer();
   }, []);
 
   return (
@@ -60,6 +72,7 @@ export default function CustomerList(props) {
                 <td>{customer.last_name}</td>
                 <td>{customer.address}</td>
                 <td>{customer.phone}</td>
+                <td><button onClick={() => deleteCustomer(customer.id)} type="button" calssName= "btn btn-danger">Delete</button></td>
               </tr>
             ))}
         </tbody>
