@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 
 export default function SalesForm() {
-  const [load, setLoad] = useState(false);
-  const navigate = useNavigate();
-
   const [automobile, setAutomobile] = useState('');
   const [salesPerson, setSalesPerson] = useState('');
   const [customer, setCustomer] = useState('');
@@ -15,7 +12,7 @@ export default function SalesForm() {
   const [customers, setCustomers] = useState([]);
 
   const getAll = async () => {
-    const automobilesUrl = 'http://localhost:8090/api/available_automobiles/';
+    const automobilesUrl = 'http://localhost:8090/api/automobiles/';
     const automobilesResponse = await fetch(automobilesUrl);
     if (automobilesResponse.ok) {
       const autoData = await automobilesResponse.json();
@@ -36,13 +33,11 @@ export default function SalesForm() {
       setCustomers(customerData.customers);
     }
 
-    if (true) {
-      setLoad(!load);
-    }
   };
+
   useEffect(() => {
     getAll();
-  }, [load]);
+  }, []);
 
   const formatSalesPrice = (value) => {
     const numericValue = value.replace(/[^\d.]/g, '');
@@ -74,12 +69,10 @@ export default function SalesForm() {
 
     const response = await fetch(salesRecordUrl, fetchConfig);
     if (response.ok) {
-      const newSalesRecord = await response.json();
       setAutomobile('');
       setSalesPerson('');
       setCustomer('');
       setPrice('');
-      navigate('/sales/');
     }
   };
 
@@ -117,11 +110,11 @@ export default function SalesForm() {
                 value={salesPerson}
                 className="form-select"
               >
-                <option value="">Choose a salesperson</option>
+                <option value="">Choose a sales person</option>
                 {salesPersons.map((salesPerson) => {
                   return (
                     <option key={salesPerson.id} value={salesPerson.id}>
-                      {salesPerson.name}
+                      {salesPerson.first_name}
                     </option>
                   );
                 })}
@@ -140,7 +133,7 @@ export default function SalesForm() {
                 {customers.map((customer) => {
                   return (
                     <option key={customer.id} value={customer.id}>
-                      {customer.name}
+                      {customer.last_name}
                     </option>
                   );
                 })}

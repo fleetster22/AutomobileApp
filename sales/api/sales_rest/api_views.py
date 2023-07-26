@@ -15,6 +15,7 @@ from .models import (
     Sale,
 )
 
+
 @require_http_methods(["GET"])
 def api_automobiles(request):
     if request.method == "GET":
@@ -24,6 +25,7 @@ def api_automobiles(request):
             encoder=AutomobileVOEncoder,
         )
 
+
 @require_http_methods(["GET", "POST"])
 def api_salespeople(request):
     if request.method == "GET":
@@ -32,8 +34,9 @@ def api_salespeople(request):
             return JsonResponse(
                 {"salespeople": salespeople},
                 encoder=SalesPersonEncoder,
+                safe=False,
             )
-        except:
+        except Salesperson.DoesNotExist:
             return JsonResponse({"message": "There are no salespeople"}, status=404)
     else:
         try:
@@ -44,11 +47,9 @@ def api_salespeople(request):
                 encoder=SalesPersonEncoder,
                 safe=False,
             )
-        except:
-            return JsonResponse(
-                {"message": "Could not create salesperson"},
-                status=400
-            )
+        except Salesperson.DoesNotExist:
+            return JsonResponse({"message": "Could not create salesperson"}, status=400)
+
 
 @require_http_methods(["GET", "DELETE", "PUT"])
 def api_salesperson(request, id):
@@ -76,11 +77,7 @@ def api_salesperson(request, id):
             content = json.loads(request.body)
             Salesperson.objects.filter(id=id).update(**content)
             sales_person = Salesperson.objects.get(id=id)
-            return JsonResponse(
-                sales_person,
-                encoder=SalesPersonEncoder,
-                safe=False
-            )
+            return JsonResponse(sales_person, encoder=SalesPersonEncoder, safe=False)
         except Salesperson.DoesNotExist:
             return JsonResponse(
                 {"message": "Salesperson does not exist"},
@@ -97,7 +94,7 @@ def api_customers(request):
                 {"customers": customers},
                 encoder=CustomerEncoder,
             )
-        except:
+        except Customer.DoesNotExist:
             return JsonResponse({"message": "There are no customers"}, status=404)
     else:
         try:
@@ -108,11 +105,12 @@ def api_customers(request):
                 encoder=CustomerEncoder,
                 safe=False,
             )
-        except:
+        except Customer.DoesNotExist:
             return JsonResponse(
                 {"message": "Could not create customer"},
                 status=400,
             )
+
 
 @require_http_methods(["GET", "DELETE", "PUT"])
 def api_customer(request, id):
@@ -165,52 +163,47 @@ def api_sales(request, salesperson_employee_id=None):
         return JsonResponse(
             {"sales": sales},
             encoder=SalesRecordEncoder,
+            safe=False,
         )
-    else:
-        content = json.loads(request.body)
-        try:
-            salesperson = Salesperson.objects.get(id=content["salesperson"])
-            content["salesperson"] = salesperson
-        except Salesperson.DoesNotExist:
-            return JsonResponse(
-                {"message": "Sales person does not exist"},
-                status=404,
-            )
-        try:
-            customer = Customer.objects.get(id=content["customer"])
-            content["customer"] = customer
-        except Customer.DoesNotExist:
-            return JsonResponse(
-                {"message": "Customer does not exist"},
-                status=404
-            )
-        try:
-            automobile = AutomobileVO.objects.get(vin=content["automobile"])
-            content["automobile"] = automobile
-        except AutomobileVO.DoesNotExist:
-            return JsonResponse(
-                {"message": "Automobile does not exist"},
-                status=404
-            )
-        record_of_sale = Sale.objects.filter(automobile_vin=content["automobile"])
-        if record_of_sale:
-            return JsonResponse(
-                {"message": "This automobile has already been sold"},
-                status=400,
-            )
-        else:
-            try:
-                sales = Sale.objects.create(**content)
-                return JsonResponse(
-                    sales,
-                    encoder=SalesRecordEncoder,
-                    safe=False,
-                )
-            except:
-                return JsonResponse(
-                    {"message": "Could not create sales record"},
-                    status=400,
-                )
+
+    content = json.loads(request.body)
+    try:
+        salesperson = Salesperson.objects.get(id=content["salesperson"])
+        content["salesperson"] = salesperson
+    except Salesperson.DoesNotExist:
+        return JsonResponse(
+            {"message": "Sales person does not exist"},
+            status=404,
+        )
+    try:
+        customer = Customer.objects.get(id=content["customer"])
+        content["customer"] = customer
+    except Customer.DoesNotExist:
+        return JsonResponse({"message": "Customer does not exist"}, status=404)
+    try:
+        automobile = AutomobileVO.objects.get(vin=content["automobile"])
+        content["automobile"] = automobile
+    except AutomobileVO.DoesNotExist:
+        return JsonResponse({"message": "Automobile does not exist"}, status=404)
+    record_of_sale = Sale.objects.filter(automobile_vin=content["automobile"])
+    if record_of_sale:
+        return JsonResponse(
+            {"message": "This automobile has already been sold"},
+            status=400,
+        )
+
+    try:
+        sales = Sale.objects.create(**content)
+        return JsonResponse(
+            sales,
+            encoder=SalesRecordEncoder,
+            safe=False,
+        )
+    except Sale.DoesNotExist:
+        return JsonResponse(
+            {"message": "Could not create sales record"},
+            status=400,
+        )
 
 
 @require_http_methods(["GET", "DELETE", "PUT"])
@@ -218,11 +211,7 @@ def api_sale(request, id):
     if request.method == "GET":
         try:
             sale = Sale.objects.get(id=id)
-            return JsonResponse(
-                sale,
-                encoder=SalesRecordEncoder,
-                safe=False
-            )
+            return JsonResponse(sale, encoder=SalesRecordEncoder, safe=False)
         except Sale.DoesNotExist:
             return JsonResponse(
                 {"message": "Sales record does not exist"},

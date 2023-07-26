@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function CustomerList() {
+export default function CustomerList(props) {
   const [customers, setCustomers] = useState([]);
   const [filter, setFilter] = useState('');
 
@@ -19,7 +19,7 @@ export default function CustomerList() {
 
   useEffect(() => {
     getAll();
-  }, [load]);
+  }, []);
 
   return (
     <div className="container">
@@ -53,7 +53,7 @@ export default function CustomerList() {
         <tbody>
           {customers
             .filter((customer) => {
-              return filter === '' ? customer : customer.last_name.includes(filter);
+              return filter === '' ? true : customer.last_name.includes(filter);
             })
             .map((customer) => (
               <tr key={customer.id}>

@@ -35,6 +35,7 @@ function CustomerForm() {
     const data = {};
 
     data.first_name = first_name;
+    data.last_name = last_name;
     data.address = address;
     data.phone_number = phoneNumber;
 
@@ -50,8 +51,6 @@ function CustomerForm() {
     try {
       const response = await fetch(customerUrl, fetchConfig);
       if (response.ok) {
-        const newCustomer = await response.json()
-
         setFirstName('');
         setLastName('');
         setAddress('');
@@ -66,7 +65,7 @@ function CustomerForm() {
     <div className="row">
       <div className="offset-3 col-6">
         <div className="shadow p-4 mt-4">
-          <h1>Create a new customer</h1>
+          <h1>Add a New customer</h1>
           <form onSubmit={handleSubmit} id="create-customer-form">
             <div className="form-floating mb-3">
               <input

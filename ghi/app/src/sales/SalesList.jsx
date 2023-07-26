@@ -1,38 +1,33 @@
 import React, { useEffect, useState } from 'react';
 
 export default function SalesList() {
-  const [load, setLoad] = useState(false);
-  const [salesPersons, setSalesPersons] = useState([]);
-  const [salesRecords, setSalesRecords] = useState([]);
+  const [sales, setSales] = useState([]);
   const [filter, setFilter] = useState('');
 
-  const handleFilterChange = (event) => setFilter(event.target.value);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('http://localhost:8090/api/sales/');
+      if (response.ok) {
+        const salesData = await response.json();
+        setSales(salesData.sales);
+      }
+    };
 
-  const getAll = async () => {
-    const salesUrl = 'http://localhost:8090/api/sales/';
-    const salesResponse = await fetch(salesUrl);
+    fetchData();
+  }, []);
 
-    if (salesResponse.ok) {
-      const salesData = await salesResponse.json();
-      setSalesRecords(salesData.sales_records);
-    }
-
-    const salesPersonUrl = 'http://localhost:8090/api/salespeople/';
-    const personResponse = await fetch(salesPersonUrl);
-
-    if (personResponse.ok) {
-      const salesPersonData = await personResponse.json();
-      setSalesPersons(salesPersonData.sales_persons);
-    }
-
-    if (true) {
-      setLoad(!load);
+  const deleteSale = async (id) => {
+    const response = await fetch(`http://localhost:8090/api/sales/${id}`, { method: 'DELETE' });
+    if (response.ok) {
+      setSales(sales.filter((sale) => sale.id !== id));
     }
   };
 
-  useEffect(() => {
-    getAll();
-  }, [load]);
+  const handleFilterChange = (event) => setFilter(event.target.value);
+
+  const filteredSales = filter
+    ? sales.filter((sale) => sale.salesperson.first_name.includes(filter))
+    : sales;
 
   return (
     <div className="container">
@@ -41,15 +36,15 @@ export default function SalesList() {
         <select
           onChange={handleFilterChange}
           required
-          name="sales_persons"
-          id="sales_persons"
+          name="salespeople"
+          id="salespeople"
           value={filter}
           className="form-select"
         >
           <option value="">All Salespeople</option>
-          {salesPersons.map((salesPerson) => (
-            <option key={salesPerson.id} value={salesPerson.name}>
-              {salesPerson.name}
+          {sales.map((sale) => (
+            <option key={sale.salesperson.employee_id} value={sale.salesperson.first_name}>
+              {sale.salesperson.first_name}
             </option>
           ))}
         </select>
@@ -57,7 +52,7 @@ export default function SalesList() {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Sales person</th>
+            <th>Salesperson Name</th>
             <th>Employee number</th>
             <th>Customer</th>
             <th>VIN</th>
@@ -65,22 +60,20 @@ export default function SalesList() {
           </tr>
         </thead>
         <tbody>
-          {salesRecords
-            .filter((salesRecord) => {
-              return filter === '' ? salesRecord : salesRecord.sales_person.name.includes(filter);
-            })
-            .map((salesRecord) => (
-              <tr key={salesRecord.id}>
-                <td>{salesRecord.sales_person.name}</td>
-                <td>{salesRecord.sales_person.employee_id}</td>
-                <td>{salesRecord.customer.last_name}</td>
-                <td>{salesRecord.automobile.vin}</td>
+          {filteredSales
+              .map((sale) => (
+              <tr key={sale.id}>
+                <td>{sale.salesperson.first_name}</td>
+                <td>{sale.salesperson.employee_id}</td>
+                <td>{sale.customer.last_name}</td>
+                <td>{sale.automobile.vin}</td>
                 <td>
                   <span>$</span>
-                  {salesRecord.price}
+                  {sale.automobile.price}
                 </td>
+                <td><button onClick={() => deleteSale(sale.id)}>Delete Sale</button></td>
               </tr>
-            ))}
+              ))}
         </tbody>
       </table>
     </div>

@@ -37,7 +37,7 @@ def api_automobiles(request):
             return HttpResponseBadRequest(f"No VehicleModel found for id: {model_id}")
 
         content["model"] = model
-        content["sold"] = content.get("sold", False)  # Default to False if not provided
+        content["sold"] = content.get("sold", False)
         try:
             auto = Automobile.objects.create(**content)
             return JsonResponse(auto, encoder=AutomobileEncoder, safe=False)

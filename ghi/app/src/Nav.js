@@ -19,9 +19,10 @@ function Nav() {
 
   const salesItems = [
     { to: "/sales", label: "Sales Record List" },
-    { to: "/customers", label: "Customer List" },
-    { to: "/customers/new", label: "Create Customer Form" },
     { to: "/sales/new", label: "New Sale Form" },
+    { to: "/customers", label: "Customer List" },
+    { to: "/customers/new", label: "Add New Customer" },
+    { to: "/salespeople", label: "Salesperson List" },
     { to: "/salespeople/new", label: "Add Salesperson Form" },
   ];
 
