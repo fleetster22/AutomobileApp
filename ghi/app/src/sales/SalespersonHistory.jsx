@@ -15,8 +15,8 @@ export default function SalespersonHistory() {
         setFilteredSales(filtered);
     }
 
-    const fetchSalespersonData = async (id) => {
-        const salespersonUrl = `http://localhost:8090/api/salespeople/${id}/`;
+    const fetchSalespersonData = async (salesperson_id) => {
+        const salespersonUrl = `http://localhost:8090/api/salespeople/${salesperson_id}/`;
         try {
             const response = await fetch(salespersonUrl);
             if (response.ok) {
@@ -50,6 +50,22 @@ export default function SalespersonHistory() {
         fetchData();
     }
     , []);
+
+    useEffect(() => {
+        if (sales.length > 0) {
+            sales.forEach((sale) => {
+                if (sale.salesperson_id) {
+                    fetchSalespersonData(sale.salesperson_id).then((salesperson) => {
+                        sale.salesperson = salesperson;
+                        setSales((prevSales) => [...prevSales]);
+                    });
+                }
+            });
+
+        }
+    }, [sales]);
+
+
 
     return (
         <div className="container">
