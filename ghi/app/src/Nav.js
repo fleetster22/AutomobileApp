@@ -13,8 +13,12 @@ function Nav() {
   };
 
   const inventoryItems = [
-    { to: "/manufacturers", label: "Manufacturer List" },
-    { to: "/manufacturers/new", label: "New Manufacturer Form" },
+    { to: '/manufacturers', label: 'Manufacturer List' },
+    { to: '/manufacturers/new', label: 'New Manufacturer Form' },
+    { to: '/models', label: 'Model List' },
+    { to: '/models/new', label: 'New Model Form' },
+    { to: '/automobiles', label: 'Automobile List' },
+    { to: '/automobiles/new', label: 'New Automobile Form' },
   ];
 
   const salesItems = [
@@ -24,6 +28,14 @@ function Nav() {
     { to: "/customers/new", label: "Add New Customer" },
     { to: "/salespeople", label: "Salesperson List" },
     { to: "/salespeople/new", label: "Add Salesperson Form" },
+  ];
+
+  const servicesItems = [
+    { to: '/services', label: 'Service Appointments' },
+    { to: '/services/history', label: 'Service Appointment History' },
+    { to: '/services/new', label: 'New Service Form' },
+    { to: '/services/technician/new', label: 'Add Technician Form' },
+    { to: '/services/all-technicians', label: 'All Technicians' },
   ];
 
   return (
@@ -55,6 +67,14 @@ function Nav() {
               </div>
               <ul className="dropdown-menu" aria-labelledby="dropdownInventory">
                 {generateDropdownItems(inventoryItems)}
+              </ul>
+            </li>
+            <li className="nav-item dropdown">
+              <div className="btn btn-info dropdown-toggle" id="dropdownServices" data-bs-toggle="dropdown">
+                Services
+              </div>
+              <ul className="dropdown-menu" aria-labelledby="dropdownServices">
+                {generateDropdownItems(servicesItems)}
               </ul>
             </li>
             <li className="nav-item dropdown">

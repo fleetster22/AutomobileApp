@@ -1,0 +1,29 @@
+{
+	"manufacturers": [
+		{
+			"href": "/api/manufacturers/1/",
+			"id": 1,
+			"name": "Audi"
+		},
+		{
+			"href": "/api/manufacturers/2/",
+			"id": 2,
+			"name": "BMW"
+		},
+		{
+			"href": "/api/manufacturers/3/",
+			"id": 3,
+			"name": "Chevy"
+		},
+		{
+			"href": "/api/manufacturers/4/",
+			"id": 4,
+			"name": "Dodge"
+		},
+		{
+			"href": "/api/manufacturers/5/",
+			"id": 5,
+			"name": "Ford"
+		}
+	]
+}

@@ -14,7 +14,6 @@ export default function CustomerList(props) {
       const customersData = await customersResponse.json();
       setCustomers(customersData.customers);
     }
-
   };
 
   useEffect(() => {
