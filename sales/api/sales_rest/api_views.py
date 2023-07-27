@@ -18,11 +18,15 @@ from .models import (
 
 @require_http_methods(["GET"])
 def api_available_automobiles(request):
-    if request.method == "GET":
+    try:
         available_autos = AutomobileVO.objects.filter(sold=False)
         return JsonResponse(
             {"available_autos": available_autos},
             encoder=AutomobileVOEncoder,
+        )
+    except AutomobileVO.DoesNotExist:
+        return JsonResponse(
+            {"message": "There are no available automobiles"}, status=404
         )
 
 
@@ -177,7 +181,7 @@ def api_sales(request, salesperson_employee_id=None):
                 },
                 "automobile": {
                     "vin": sale.automobile.vin,
-                    "price": sale.automobile.price,
+                    "sold": sale.automobile.sold,
                 },
             }
             for sale in sales

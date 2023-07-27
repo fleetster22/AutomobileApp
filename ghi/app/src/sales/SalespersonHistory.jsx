@@ -8,15 +8,10 @@ export default function SalespersonHistory() {
     const handleSearchChange = (event) => setSearch(event.target.value);
 
     const handleSearch = () => {
-        const filtered = sales.filter((sale) => {
-            if (!search) return true;
-            return sale.vin.includes(search);
-        });
-        setFilteredSales(filtered);
+        setFilteredSales(sales.filter(sale => !search || sale.salesperson.first_name.includes(search)));
     }
-
-    const fetchSalespersonData = async (salesperson_id) => {
-        const salespersonUrl = `http://localhost:8090/api/salespeople/${salesperson_id}/`;
+    const fetchSalespersonData = async (id) => {
+        const salespersonUrl = `http://localhost:8090/api/salespeople/${id}/`;
         try {
             const response = await fetch(salespersonUrl);
             if (response.ok) {
@@ -39,6 +34,7 @@ export default function SalespersonHistory() {
                 setSales(data.sales);
                 setFilteredSales(data.sales);
             } else {
+
                 return alert("Error fetching sales data");
             }
         } catch (error) {
@@ -71,16 +67,16 @@ export default function SalespersonHistory() {
         <div className="container">
              <h1 className="text-center mt-4">Sales history</h1>
       <div className="form-outline mb-4">
-        <input
-            type="search"
-            id="sales-search-input"
-            className="form-control"
-            placeholder="Search by Employee name"
-            onChange={handleSearchChange}
-        />
-        <button onClick={handleSearch} className="btn btn-info">
-            Search
-        </button>
+      <input
+    type="search"
+    id="sales-search-input"
+    className="form-control"
+    placeholder="Search by Employee First Name"
+    onChange={(event) => {
+        handleSearchChange(event);
+        handleSearch();
+    }}
+/>
         </div>
         <table className="table table-striped">
             <thead>
@@ -94,8 +90,8 @@ export default function SalespersonHistory() {
             <tbody>
                 {filteredSales.map((sale) => (
                     <tr key={sale.id}>
-                        <td>{sale.salesperson.name}</td>
-                        <td>{sale.customer.name}</td>
+                        <td>{sale.salesperson.first_name} {sale.salesperson.last_name}</td>
+                        <td>{sale.customer.first_name} {sale.customer.last_name}</td>
                         <td>{sale.vin}</td>
                         <td>{sale.price}</td>
                     </tr>
