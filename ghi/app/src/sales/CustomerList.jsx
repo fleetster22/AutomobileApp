@@ -18,12 +18,19 @@ export default function CustomerList(props) {
 
   const deleteCustomer = async (id) => {
     const deleteUrl = `http://localhost:8090/api/customers/${id}`;
-    const deleteResponse = await fetch(deleteUrl, {
-      method: 'DELETE',
-    });
+    try {
+      const deleteResponse = await fetch(deleteUrl, {
+        method: 'DELETE',
+      });
 
-    if (deleteResponse.ok) {
+      if (!deleteResponse.ok) {
+        throw new Error(`HTTP error! status: ${deleteResponse.status}`);
+      }
+
       getCustomer();
+
+    } catch (error) {
+      alert(error);
     }
   };
 
